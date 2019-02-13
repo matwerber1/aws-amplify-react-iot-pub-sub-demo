@@ -1,3 +1,19 @@
+# Steps
+
+1. Install NodeJS, NPM, create-react-app, and Amplify SDK
+
+2. Create react app (already done in this project)
+
+```sh
+npm init react-app aws-amplify-react-template
+```
+
+3. Start local test server
+
+```sh
+npm start
+```
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
