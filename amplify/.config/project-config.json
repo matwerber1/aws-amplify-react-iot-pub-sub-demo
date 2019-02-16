@@ -1,6 +1,6 @@
 {
-    "projectName": "amplify-react-app",
-    "version": "2.0",
+    "projectName": "awsamplifyreacttempl",
+    "version": "1.0",
     "frontend": "javascript",
     "javascript": {
         "framework": "react",
