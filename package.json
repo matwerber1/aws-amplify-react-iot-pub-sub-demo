@@ -5,6 +5,7 @@
   "dependencies": {
     "aws-amplify": "^1.1.19",
     "aws-amplify-react": "^2.3.0",
+    "aws-sdk": "^2.404.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-scripts": "2.1.5"
