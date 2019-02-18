@@ -31,3 +31,8 @@
     transform: rotate(360deg);
   }
 }
+
+.AuthDataDisplay {
+  width: 500;
+  text-align: left;
+}
