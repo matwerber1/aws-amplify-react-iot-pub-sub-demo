@@ -15,14 +15,23 @@ function App(props) {
         <img src={logo} className="App-logo" alt="logo" />
       </header>
       <br/>
+      <MQTTDisplay {...props} />
+      <br/>
       <AuthDisplay {...props} />
     </div>
   );
 
 }
 
-function AuthDisplay(props) {
+function MQTTDisplay(props) {
+  return (
+    <div className="AuthDisplay">
+      MQTT
+  </div>
+);
+}
 
+function AuthDisplay(props) {
     return (
       <div className="AuthDisplay">
         Auth state: {props.authState} <br/> <br/>
@@ -33,7 +42,6 @@ function AuthDisplay(props) {
         </div>
     </div>
   );
-
 }
 
 export default withAuthenticator(App, true);
