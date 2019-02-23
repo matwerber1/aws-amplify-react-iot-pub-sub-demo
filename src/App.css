@@ -32,7 +32,14 @@
   }
 }
 
-.AuthDataDisplay {
-  width: 500;
+.AuthDisplay {
+  margin: 0 auto;
+  max-width: 50em;
+  border-style: solid;
   text-align: left;
+  padding: 1em;
+}
+.AuthData {
+  border-style: solid;
+  border-width: 1px;
 }

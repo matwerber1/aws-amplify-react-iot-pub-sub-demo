@@ -5,7 +5,9 @@ import './App.css';
 import Amplify from 'aws-amplify';
 import awsmobile from './aws-exports';
 import { withAuthenticator } from 'aws-amplify-react';
-import ReactJson from 'react-json-view';
+
+import JSONTree from 'react-json-tree';
+
 Amplify.configure(awsmobile);
 
 class App extends Component {
@@ -15,39 +17,27 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
         </header>
-        <AuthDataDisplay {...this.props} />
+        <br/>
+        <AuthDisplay {...this.props} />
       </div>
     );
   }
 }
 
-class AuthDataDisplay extends Component {
+class AuthDisplay extends Component {
 
   render() {
 
     var keysToCollapse = ['client','refreshToken'];
 
     return (
-      <div className="AuthDataDisplay">
-          <p>
-          Auth state is {this.props.authState}
-          </p>
-          Auth data is <br/>
-          <ReactJson 
-            src={this.props.authData} 
-            theme={"hopscotch"}
-            displayObjectSize={false} 
-            displayDataTypes={false} 
-            collapseStringsAfterLength={50} 
-            name={false}
-            shouldCollapse={(field)=>{
-              if (keysToCollapse.includes(field.name)) {
-                return true;
-              } else {
-                return false;
-              }
-            }}
-          />
+      <div className="AuthDisplay">
+          Auth state: {this.props.authState} <br/> <br/>
+          
+          Auth data:<br/>
+          <div className="AuthData">
+            <JSONTree data={this.props.authData} theme={"tomorrow"} invertTheme={true} />
+          </div>
       </div>
     );
   }
