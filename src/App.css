@@ -32,6 +32,18 @@
   }
 }
 
+.MQTTDisplay {
+  margin: 0 auto;
+  max-width: 50em;
+  border-style: solid;
+  text-align: left;
+  padding: 1em;
+}
+
+.IotMessage {
+  font-size: .8em
+}
+
 .AuthDisplay {
   margin: 0 auto;
   max-width: 50em;
