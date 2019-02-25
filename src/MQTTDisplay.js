@@ -1,102 +1,103 @@
 import React, { useState, useEffect } from 'react';
-import Amplify, { PubSub } from 'aws-amplify';
+import Amplify, { PubSub, Auth } from 'aws-amplify';
 import { AWSIoTProvider } from '@aws-amplify/pubsub/lib/Providers';
 import * as deepmerge from 'deepmerge';
 import awsmobile from './aws-exports';
+import AWSIoTData from 'aws-iot-device-sdk';
+import AWSConfiguration from './aws-iot-configuration.js';
+
 Amplify.configure(awsmobile);
 
-connectToAwsIot();
 
-function connectToAwsIot() {
-
-  const AWSIotConfiguration = require('./aws-iot-configuration.js');
-
-  Amplify.addPluggable(new AWSIoTProvider({
-    aws_pubsub_region: AWSIotConfiguration.region,
-    aws_pubsub_endpoint: AWSIotConfiguration.endpoint,
-  }));  
-
-  // At this time, addPluggable() above does not emit error if connection fails, so
-  // technically code below is misleading because we might not actually have valid connection details. 
-  console.log(`Connected to ${AWSIotConfiguration.endpoint} in ${AWSIotConfiguration.region}`);
-  
-}
-
+//######################################################################################
 function MQTTDisplay(props) {
 
-    const [desiredTopic, setDesiredTopic] = useState("#");
-    const [subscriptions, setSubscriptions] = useState({items: {}});
-  
-    function renderSubscriptions() {
-      
-      if (Object.keys(subscriptions.items).length === 0) {
-        return "...";
-      } 
-      else {
-       return (
-        <div>
-          {
-            Object.keys(subscriptions.items).map(function(key, index) {
-              return <MQTTSubscription key={key} topic={key} />;
-              //return <TestSubscription key={key} topic={key} />
-            })
-          }
-        </div>
-      );
-      
-      }
-    }
-  
-    function subcribeToTopic(topic) {
+  const [isConnected, setIsConnected]           = useState(false);
+  const [desiredTopic, setDesiredTopic]         = useState("#");
+  const [subscribedTopics, setSubscribedTopics] = useState([]);
+  const [mqttClient, setMqttClient]             = useState();
 
-      if (!subscriptions.items.hasOwnProperty(topic)) {
-        
-        // this object is needed if we later want to unsubscribe
-        const newSubscription = PubSub.subscribe(topic).subscribe({
-          next:  data => {
-            const newMessage = `${(new Date()).toLocaleDateString()} ${(new Date()).toLocaleTimeString()} - Topic '${topic}' - \n ${JSON.stringify(data.value,null,2)}`; 
-            console.log(newMessage);      
-          },
-          error: error => {
-            console.error('Subscription error: ' + error)
-          },
-          close: () => {
-            console.log('Subscription closed.')
-          },
-        });    
+  useEffect(() => {
+    // call function to connect to AWS IoT
+    connectToAwsIot();
+  },[]); // the "[]" causes this to execute just once
+
+  async function connectToAwsIot() {
+
+    // mqtt clients require a unique clientId; we generate one below
+    var clientId = 'mqtt-explorer-' + (Math.floor((Math.random() * 100000) + 1));
+
+    // get credentials and, from them, extract key, secret key, and session token
+    // Amplify's auth functionality makes this easy for us...
+    var currentCredentials = await Auth.currentCredentials();
+    var essentialCredentials = Auth.essentialCredentials(currentCredentials);
     
-        // our state tracks the subscription object itself so we can later disconnect
-        // as well as the messages received thus far
-        var subscriptionObject = {
-          items: {
-            [topic]: {
-              subscription: newSubscription,
-              messages: []
-            }
-          }
-        };
-        
-        var newSubscriptions = deepmerge(subscriptions, subscriptionObject);
-        setSubscriptions(newSubscriptions);
-        console.log(`Subscribed to topic '${topic}'`);  
+    // Create an MQTT client
+    var newMqttClient = AWSIoTData.device({
+      region: AWSConfiguration.region,
+      host:AWSConfiguration.host,
+      clientId: clientId,
+      protocol: 'wss',
+      maximumReconnectTimeMs: 8000,
+      debug: true,
+      accessKeyId:  essentialCredentials.accessKeyId,
+      secretKey:    essentialCredentials.secretAccessKey,
+      sessionToken: essentialCredentials.sessionToken
+     });
+
+    // On connect, update status
+    newMqttClient.on('connect', function() {
+      setIsConnected(true);
+      console.log('Connected to AWS IoT!');
+      newMqttClient.subscribe('test1/#');
+      newMqttClient.subscribe('test1');
+      console.log('Subscribed to "test1" and "test1/#"');
+    
+    });
+
+    // add event handler for received messages
+    newMqttClient.on('message', function(topic, payload) {
+      var myDate = new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString();
+      console.log(`message at ${myDate}`, topic, payload.toString());
+    });
+
+    // update state to track mqtt client
+    setMqttClient(newMqttClient);
+
+  }
+
+    async function handleSubscriptionRequest(e) {
+      
+      // stop submit button from refreshing entire page
+      e.preventDefault();
+
+      if (isConnected) {
+        if (subscribedTopics.includes(desiredTopic)) {
+          console.log(`You are already subscribed to topic '${desiredTopic}'!`);
+        }
+        else {
+          mqttClient.subscribe(desiredTopic);
+          setSubscribedTopics(prevTopics => [...prevTopics, desiredTopic]);
+          console.log(`Subscribed to topic '${desiredTopic}'!`);
+        }
       }
       else {
-        console.log(`Topic '${topic}' already exists in subscriptions.`);
+        alert('Cannot subscribe to topic because you are not connected to AWS IoT.');
       }
     }
-  
-    const handleSubmit = e => {
-      e.preventDefault();
-      if (!desiredTopic) return;
-      subcribeToTopic(desiredTopic);
-      setDesiredTopic("");
-    };
 
     return (
       <div className="MQTTDisplay">
-        <form onSubmit={handleSubmit} 
+
+        <b>AWS IoT Core Connection Status:</b>
+        <br/>
+        {isConnected ? "Connected" : "Not Connected"} 
+        <br/><br/>
+
+        <form onSubmit={handleSubscriptionRequest} 
         >
-          IoT Topic:
+          <b>IoT Topic:</b>
+          <br/>
           <input
             value={desiredTopic}
             onChange={e => setDesiredTopic(e.target.value)}
@@ -111,66 +112,14 @@ function MQTTDisplay(props) {
           <br/><br/>
         </form>
   
-        Subscriptions: <br/>
-        {renderSubscriptions()}
-      </div>
-    );
-  }
-
-
-
-/*#################################################################################*/
-function MQTTSubscription(props) {
-
-    const [messages, setMessages] = useState([]);
-    
-    //const subscription = subscribeToTopic(props.topic);
-  
-    function subscribeToTopic(topic) {
-  
-      const newSubscription = PubSub.subscribe(topic).subscribe({
-        next:  data => {
-          const newMessage = `${topic} - ${JSON.stringify(data.value,null,2)}`; 
-          setMessages(prevMessages => ([...prevMessages, newMessage]));
-          console.log('Message received', data);      
-        },
-        error: error => {
-          console.error('Subscription error: ' + error)
-        },
-        close: () => {
-          console.log('Subscription closed.')
-        },
-      });    
-  
-      console.log(`Subscribed to topic '${topic}'`);  
-  
-      return newSubscription;
-    }
-  
-    function renderMessages() {
-      
-      var messages=[];
-  
-      if (messages.length === 0) {
-        return ("...");
-      }
-      else {
-        return(
-          <ul>
-            {
-              messages.map((message, index) => {
-                return (<li className="MQTTMessage" key={index}>{(new Date()).toLocaleDateString()} {(new Date()).toLocaleTimeString()} - {message}</li>);
-              })
-            }
-          </ul>
-        );
-      }
-    }
-  
-    return (
-      <div className="MQTTSubscription">
-        Subscription to '{props.topic}':
-        {renderMessages()}
+        <b>Subscriptions:</b> <br/>
+        {subscribedTopics.map(topic => {
+          return (
+            <div key={topic}>
+              {topic}
+            </div>
+          )
+        })}
       </div>
     );
   }
