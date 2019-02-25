@@ -24,10 +24,10 @@ View the live demo here: [https://master.d3k5tp0fzc6h7j.amplifyapp.com/](https:/
 
 6. Make note of the "Auth Identity ID".
 
-7. Per instructions in [manual-steps.md](./manual-steps.md]), create a new IoT policy named "ReactIotPolicy".
+7. Per instructions in [manual-steps.md](./manual-steps.md), create a new IoT policy named "ReactIotPolicy".
 
-8. Per instructions in [manual-steps.md](./manual-steps.md]), issue CLI command to grant your user's auth identity ID (Step 6) access to the new IoT policy (Step 7). 
+8. Per instructions in [manual-steps.md](./manual-steps.md), issue CLI command to grant your user's auth identity ID (Step 6) access to the new IoT policy (Step 7). 
 
-9. Per instructions in [manual-steps.md](./manual-steps.md]), edit your authorized users' IAM role to have permission to connect/publish/subscribe to AWS IoT. 
+9. Per instructions in [manual-steps.md](./manual-steps.md), edit your authorized users' IAM role to have permission to connect/publish/subscribe to AWS IoT. 
 
 10. That *should* be it!
