@@ -2,13 +2,16 @@
 
 ## Overview
 
-This is (an attempt at) a very basic AWS Amplify + AWS IoT Javascript SDK + React project that combines basic authentication via Amazon Cognito with AWS IoT Core pubsub via the aws-iot-device-sdk to (1) authenticate via Cognito, (2) subscribe to one or more topics and (3) publish messages to a user-specified topic. 
+This is a very basic AWS Amplify + AWS IoT Javascript SDK + React project that combines basic authentication via Amazon Cognito with AWS IoT Core pubsub via the aws-iot-device-sdk to (1) authenticate via Cognito, (2) subscribe to one or more topics and (3) publish messages to a user-specified topic. 
 
-The functionality is more or less a similar, though far less attractive, version of the "Test" tab in the AWS IoT console.
+The functionality is similar to (though simpler, less pretty) version of the "Test" tab in the AWS IoT console:
+
+![alt text](./images/demo1.png)
+![alt text](./images/demo2.png)
 
 ## Demo
 
-View the live demo here: [https://master.d3k5tp0fzc6h7j.amplifyapp.com/](https://master.d3k5tp0fzc6h7j.amplifyapp.com/)
+View the live demo here: [https://master.d3lu5yrdzirdad.amplifyapp.com/](https://master.d3lu5yrdzirdad.amplifyapp.com/)
 
 ## Deployment
 
