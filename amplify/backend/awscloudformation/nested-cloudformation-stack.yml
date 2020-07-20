@@ -81,7 +81,7 @@
 		"authcognito81d9f49f": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/awsamplifyreacttempl-20190216120921-deployment/amplify-cfn-templates/auth/cognito81d9f49f-cloudformation-template.yml",
+				"TemplateURL": "https://iot-core-integral-design.s3.amazonaws.com/AWSCloudFormation/cognito81d9f49f-cloudformation-template.yml",
 				"Parameters": {
 					"identityPoolName": "cognito81d9f49f_identitypool_81d9f49f",
 					"allowUnauthenticatedIdentities": false,
