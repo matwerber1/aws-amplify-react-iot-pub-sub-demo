@@ -176,7 +176,7 @@ Resources:
           Required: true
           Mutable: true
         
-      
+      UsernameAttributes: email
       AutoVerifiedAttributes: !Ref autoVerifiedAttributes
       
       
