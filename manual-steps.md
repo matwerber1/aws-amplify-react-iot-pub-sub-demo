@@ -2,7 +2,7 @@
 
 These manual steps need to be automated: 
 
-1. Per instructions [here](https://aws-amplify.github.io/docs/js/pubsub), create and IoT Core policy to allow full access to all topics. Policy name is ```ReactIoTPolicy```.
+1. Per instructions [here](https://aws-amplify.github.io/docs/js/pubsub), create an IoT Core policy to allow full access to all topics. Policy name is ```ReactIoTPolicy```.
 
 The resource ARN in the link above did not work (resulted in error when subscribing). Changing the ARN to "*" worked, as per below policy:
 
