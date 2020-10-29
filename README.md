@@ -1,5 +1,12 @@
 # aws-amplify-react-template
 
+## Update
+
+I've since made what I feel is a cleaner UI (and other features, not just AWS IoT) in this project:
+https://github.com/matwerber1/aws-amplify-react-toolkit
+
+The project above is probably an easier way to do things...
+
 ## Overview
 
 This is a very basic AWS Amplify + AWS IoT Javascript SDK + React project that combines basic authentication via Amazon Cognito with AWS IoT Core pubsub via the aws-iot-device-sdk to (1) authenticate via Cognito, (2) subscribe to one or more topics and (3) publish messages to a user-specified topic. 
