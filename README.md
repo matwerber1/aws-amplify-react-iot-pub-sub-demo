@@ -2,10 +2,10 @@
 
 ## Update
 
-I've since made what I feel is a cleaner UI (and other features, not just AWS IoT) in this project:
+I've since made what I feel is a cleaner UI, better code, and other features (not just AWS IoT) in this project:
 https://github.com/matwerber1/aws-amplify-react-toolkit
 
-The project above is probably an easier way to do things...
+The project above is probably an easier way to do things and I recommend it over this project.
 
 ## Overview
 
